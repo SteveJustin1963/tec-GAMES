@@ -7,3 +7,6 @@
 - https://www.codeproject.com/Articles/28228/Star-Trek-1971-Text-Game
 - 
 
+## Ref
+- https://github.com/bchiha/Ruby-Text-Adventure-Kernel-System
+- 
