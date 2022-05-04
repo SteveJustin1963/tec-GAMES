@@ -1,0 +1,16 @@
+ pseudocode 
+
+int main()
+{
+   //initialize game
+   //create player
+   //create enemies
+   while(game is running)
+   {
+      //get input from player
+      //move player
+      //move enemies
+      //check for collisions
+      //update screen
+   }
+}
