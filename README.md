@@ -11,6 +11,4 @@
 - https://github.com/bchiha/Ruby-Text-Adventure-Kernel-System
 - 
 
-
-### pascal program for snake game
-video game in which the player controls a snake-like creature in a grid environment. The goal is to collect as many items, such as food or power-ups, as possible while avoiding obstacles and other snakes.
+ 
