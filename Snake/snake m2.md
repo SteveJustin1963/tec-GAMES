@@ -1,3 +1,4 @@
+```
 // Constants
 8 w ! // width and height of game field
 2 l ! // initial snake length
@@ -89,3 +90,5 @@
 
 // Start the game
 I M
+```
+
