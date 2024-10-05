@@ -1,6 +1,6 @@
 does not work yet
 
-
+// MINT
 ```
 // Constants
 8 w ! // width and height of game field
