@@ -1,96 +1,211 @@
-does not work yet
-
-// MINT
 ```
-// Constants
-8 w ! // width and height of game field
-2 l ! // initial snake length
-0 d ! // initial direction (0: right, 1: down, 2: left, 3: up)
-10 s ! // initial speed (lower is faster)
+8 w!
+2 l!
+0 d!
+10 s!
+[0 0] n!
+0 f!
+0 g!
 
-// Variables
-[ ] n ! // snake array (each element is x*16 + y)
-0 f ! // fruit position
-0 g ! // game over flag
+:I 
+  [0 0] n!
+  w 2/ 16 * w 2/ + n 0?!
+  0 g!
+  N
+;
 
-// Initialize game
-:I
-  [ ] n !
-  w 2 / " 16 * + n +! // add initial snake head
-  1 ( " 1 - 16 * n 0 ? + n +! ) // add initial snake body
-  N // new fruit
-  0 g ! // reset game over flag
+:M 
+  R
+  s D
+  H
+  U
+  g /F = (M)
+;
+
+:R
+  n /S (
+    n /i ? P
+  )
+  f P
+;
+
+:U
+  n 0? h!
+  d 0 = (h 1+ h!)
+  d 1 = (h 16+ h!)
+  d 2 = (h 1- h!)
+  d 3 = (h 16- h!)
+  h 0 < (h w w * + h!)
+  h w w * >= (h w w * - h!)
+  h f = (
+    l 1+ l!
+    s 1- s!
+    h n +!
+    N
+  ) /E (
+    h n +!
+    n /S 1- n!
+  )
+  n /S 1- (
+    n /i ? h = (1 g!)
+  )
+;
+
+:N
+  /r w % " 16 * w % +
+  " f!
+;
+
+:P 
+  " 16/ x!
+  " 15& y!
+  1 y << x w * + c!
+  1 c /O
+;
+
+:D
+  100 (100())
+;
+
+:H
+  /K
+  87 = (d 2 = /F = (3 d!))
+  83 = (d 3 = /F = (1 d!))
+  65 = (d 0 = /F = (2 d!))
+  68 = (d 1 = /F = (0 d!))
+;
+```
+```
+I M
+```
+
+```
+// Game field size (8x8 grid)
+8 w!
+
+// Initial snake length of 2 segments
+2 l!
+
+// Direction (0=right, 1=down, 2=left, 3=up)
+0 d!
+
+// Game speed (higher number = slower)
+10 s!
+
+// Initialize snake array (stores positions as x*16 + y)
+[0 0] n!
+
+// Fruit position
+0 f!
+
+// Game over flag (0=playing, 1=game over)
+0 g!
+
+// Initialize game state
+:I 
+  // Reset snake array to initial state
+  [0 0] n!
+  
+  // Place snake head in middle of screen
+  w 2/ 16 * w 2/ + n 0?!
+  
+  // Reset game over flag
+  0 g!
+  
+  // Place first fruit
+  N
 ;
 
 // Main game loop
-:M
-  R // render
-  s D // delay based on speed
-  U // update
-  g @ /F = M // continue if not game over
+:M 
+  R        // Render current state
+  s D      // Add delay based on speed
+  H        // Check for input
+  U        // Update game state
+  g /F = (M)  // Continue if not game over
 ;
 
 // Render game state
 :R
-  w w * ( 0 i ! ) // clear screen
-  n /S ( n i ? P ) // draw snake
-  f @ P // draw fruit
+  // Draw all snake segments
+  n /S (
+    n /i ? P
+  )
+  // Draw fruit
+  f P
 ;
 
 // Update game state
 :U
-  // Move snake
-  n 0 ? " // get head position
-  d @ 0 = ( 16 + ) // move right
-  d @ 1 = ( 1 + ) // move down
-  d @ 2 = ( 16 - ) // move left
-  d @ 3 = ( 1 - ) // move up
-  " 240 & 16 % w * + // wrap around screen
-  " n +! // add new head
+  // Get current head position
+  n 0? h!
   
-  // Check for fruit
-  " f @ = ( 
-    l @ 1 + l ! // increase length
-    s @ 1 - 1 > ( " 1 - s ! ) // increase speed
-    N // new fruit
-  ) ( n /S 1 - n ! ) // remove tail if no fruit eaten
+  // Move head based on direction
+  d 0 = (h 1+ h!)     // Right
+  d 1 = (h 16+ h!)    // Down
+  d 2 = (h 1- h!)     // Left
+  d 3 = (h 16- h!)    // Up
+  
+  // Handle screen wrapping
+  h 0 < (h w w * + h!)
+  h w w * >= (h w w * - h!)
+  
+  // Check if snake ate fruit
+  h f = (
+    l 1+ l!     // Increase length
+    s 1- s!     // Increase speed
+    h n +!      // Add new head
+    N           // New fruit
+  ) /E (        // If didn't eat fruit:
+    h n +!      // Add new head
+    n /S 1- n!  // Remove tail
+  )
   
   // Check for collision with self
-  n /S 1 - 1 ( 
-    n i ? n 0 ? = ( 1 g ! ) // game over if head hits body
+  n /S 1- (
+    n /i ? h = (1 g!)
   )
 ;
 
-// Generate new fruit position
+// Generate new fruit at random position
 :N
-  /r w * w % " 16 * + // random position
-  n /S ( " n i ? = N ) // retry if on snake
-  " f ! // set new fruit position
+  // Random position within bounds
+  /r w % " 16 * w % +
+  " f!
 ;
 
-// Turn on pixel
-:P
-  " 16 / i ! // x coordinate
-  " 15 & j ! // y coordinate
-  1 j << i w * + !
+// Draw pixel at position (converts position to x,y coordinates)
+:P 
+  // Extract x coordinate (position / 16)
+  " 16/ x!
+  
+  // Extract y coordinate (position & 15)
+  " 15& y!
+  
+  // Calculate screen memory position
+  1 y << x w * + c!
+  
+  // Output to screen
+  1 c /O
 ;
 
-// Delay
-:D ( 1000 * ( 1 - " /W ) ) ;
+// Delay function (controls game speed)
+:D
+  // Nested delay loops
+  100 (100())
+;
 
-// Handle input
+// Handle keyboard input
 :H
-  0 /I // read input port
-  1 = ( d @ 2 = /F 3 d ! ) // up
-  2 = ( d @ 3 = /F 1 d ! ) // down
-  4 = ( d @ 0 = /F 2 d ! ) // left
-  8 = ( d @ 1 = /F 0 d ! ) // right
+  // Read keyboard
+  /K
+  
+  // Check WASD keys and update direction if valid
+  87 = (d 2 = /F = (3 d!))   // W = Up
+  83 = (d 3 = /F = (1 d!))   // S = Down
+  65 = (d 0 = /F = (2 d!))   // A = Left
+  68 = (d 1 = /F = (0 d!))   // D = Right
 ;
 
-// Set up interrupt handler
-:Z H ;
-0 /X /v Z !
-
-// Start the game
-I M
+// Start game by typing: I M
 ```
