@@ -1,4 +1,6 @@
 ### code
+
+- https://github.com/turbo-gecko/TEC/tree/main
 - Snake by Benn Grimmet 
 - https://github.com/bchiha/TEC-1D-Stuff/tree/master/code/games
 - 
